@@ -1,6 +1,8 @@
-pub mod contract;
-mod error;
+pub mod entrypoints;
 pub mod msg;
-pub mod state;
+mod error;
+mod state;
+mod queries;
+mod executions;
 
 pub use crate::error::ContractError;
