@@ -164,7 +164,7 @@ pub fn participate(
     user_state.save(deps.storage)?;
 
     Ok(Response::new().add_attributes(vec![
-        attr("action", "execute_claim"),
+        attr("action", "participate"),
         attr("user", info.sender.to_string()),
         attr("assigned_amount", amount.to_string()),
     ]))
@@ -188,11 +188,22 @@ pub fn claim(
     user_state.last_claimed_time = env.block.time.seconds();
     user_state.save(deps.storage)?;
 
-    Ok(Response::new().add_attributes(vec![
-        attr("action", "execute_withdraw_token"),
-        attr("user", info.sender.to_string()),
-        attr("claimed_amount", claimed_amount.to_string()),
-    ]))
+    let config = Config::load(deps.storage)?;
+    let res = Response::new()
+        .add_message(WasmMsg::Execute {
+            contract_addr: config.cw20_token_address.to_string(),
+            funds: vec![],
+            msg: to_binary(&Cw20ExecuteMsg::Transfer {
+                recipient: user_state.user.to_string(),
+                amount: claimed_amount,
+            })?,
+        })
+        .add_attributes(vec![
+            attr("action", "claim"),
+            attr("address", user_state.user.to_string()),
+            attr("amount", claimed_amount.to_string()),
+        ]);
+    Ok(res)
 }
 
 pub fn withdraw(

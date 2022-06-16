@@ -8,7 +8,7 @@ use crate::msg::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
 use crate::queries::{query_config, query_merkle_root, query_state, query_user_state};
 
 // Version info, for migration info
-const CONTRACT_NAME: &str = "crates.io:cw20-merkle-airdrop";
+const CONTRACT_NAME: &str = "valkyrie-airdrop";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[cfg_attr(not(feature = "library"), entry_point)]
